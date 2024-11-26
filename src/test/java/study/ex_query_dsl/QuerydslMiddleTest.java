@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.ex_query_dsl.dto.MemberDto;
+import study.ex_query_dsl.dto.QMemberDto;
 import study.ex_query_dsl.dto.UserDto;
 import study.ex_query_dsl.entity.Member;
 import study.ex_query_dsl.entity.QMember;
@@ -214,6 +215,33 @@ public class QuerydslMiddleTest {
         for (UserDto userDto : result) {
             System.out.println("userDto = " + userDto);
         }
+    }
+
+    /**
+     * Constructor과의 차이는 얘는 오류가 나면 compile 시 알려준다.
+     * Constructor는 오류나면 runtimeError
+     */
+    @Test
+    public void findDtoByQueryProjection() {
+        List<MemberDto> result = queryFactory
+                .select(new QMemberDto(member.username, member.age))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    /**
+     * Distinct
+     */
+    @Test
+    public void distinct() {
+        List<String> result = queryFactory
+                .select(member.username).distinct()
+                .from(member)
+                .fetch();
     }
 
 

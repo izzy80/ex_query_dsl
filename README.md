@@ -95,6 +95,13 @@ logging.level:
    이유: Q파일은 QueryDSL에 의해 자동 생성되며, 이를 Git에서 관리하면 충돌이 발생할 가능성이 높습니다.</br>
    참고 링크: <a href="https://www.inflearn.com/questions/875369" target="_blank">Inflearn Q&A</a>
    </details>
+2. fetchjoin? 여러 쿼리?
+    <details>
+   <summary>자세히 보기</summary>
+   이유 : 웹서버와 데이터베이스 서버가 서로 다른 원격지에 존재한다면 쿼리를 여러번 날리는 것보다 join 을 통해 한번에 조회하는 것이 효율적일 확률이 높습니다.</br>   
+   애플리케이션 처리속도가 원격 통신속도보다 월등히 빠르기 때문입니다.
+   참고 링크 : <a href="https://www.inflearn.com/questions/1213023" target="_blank">Inflearn Q&A</a>
+   </details>
 
 ## 개발 팁 (QueryDSL 및 JPA 관련)
 ### 1. Gradle 설정
@@ -133,4 +140,9 @@ logging.level:
 - **대안**:
     - **DTO**를 활용하여 데이터를 처리하도록 권장.
 ---
-### 7. 
+### 7. Projection 반환 결과
+- tuple
+- dto
+- Dto에 생성자 위에 @QueryProjection
+  - 컴파일 오류를 알려줘서 좋지만 queryDsl의 의존성이 있어서 실무에서는 안 씀
+  - dto가 여기저기 레이어에서 사용되기 때문
