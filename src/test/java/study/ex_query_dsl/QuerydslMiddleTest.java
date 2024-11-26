@@ -244,6 +244,10 @@ public class QuerydslMiddleTest {
                 .fetch();
     }
 
+    /**
+     *
+     */
+
 
 
 
