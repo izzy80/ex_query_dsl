@@ -146,3 +146,5 @@ logging.level:
 - Dto에 생성자 위에 @QueryProjection
   - 컴파일 오류를 알려줘서 좋지만 queryDsl의 의존성이 있어서 실무에서는 안 씀
   - dto가 여기저기 레이어에서 사용되기 때문
+---
+### 8. 벌크 연산

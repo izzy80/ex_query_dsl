@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import study.ex_query_dsl.dto.MemberDto;
 import study.ex_query_dsl.dto.QMemberDto;
@@ -316,6 +317,109 @@ public class QuerydslMiddleTest {
     //조립이 가능하다는 장점
     private Predicate allEq(String usernameCond, Integer ageCond) {
         return usernameEq(usernameCond).and(ageEq(ageCond));
+    }
+
+    /**
+     * 영속성컨텍스트(1차캐시) 무시하고 바로 DB를 수정함.
+     * -> 상태가 안 맞음
+     *
+     * 결과
+     * member1 = Member(id=1, username=member1, age=10)
+     * member1 = Member(id=2, username=member2, age=20)
+     * member1 = Member(id=3, username=member3, age=30)
+     * member1 = Member(id=4, username=member4, age=40)
+     *
+     * 실제 DB
+     * member1 = Member(id=1, username=비회원, age=10)
+     * member1 = Member(id=2, username=비회원, age=20)
+     * member1 = Member(id=3, username=member3, age=30)
+     * member1 = Member(id=4, username=member4, age=40)
+     */
+    @Test
+    @Commit
+    public void bulkUpdate() {
+        //영속성 컨테스트에서
+        //A. 쿼리 실행 전
+        //member1 = 10 -> DB member1
+        //member2 = 20 -> DB member2
+        //member3 = 30 -> DB member3
+        //member4 = 40 -> DB member4
+        long count = queryFactory
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+        //B. 쿼리 실행 후
+        //id username age
+        //1 member1 = 10 -> 1 DB 비회원
+        //2 member2 = 20 -> 2 DB 비회원
+        //3 member3 = 30 -> 3 DB member3
+        //4 member4 = 40 -> 4 DB member4
+
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .fetch();
+        //쿼리는 기본적으로 db에서 가져옴. 그래서 영속성 컨텍스트에 저장함
+        //어라 근데 영속성컨텍스트에 이미 있네
+        //그럼 영속성컨텍스트에 있는 걸 사용하고 db에서 가져온 걸 버린다.
+
+        for(Member member1 : result){
+            System.out.println("member1 = " + member1);
+        }
+    }
+
+    /**
+     * 결과
+     * member1 = Member(id=1, username=비회원, age=10)
+     * member1 = Member(id=2, username=비회원, age=20)
+     * member1 = Member(id=3, username=member3, age=30)
+     * member1 = Member(id=4, username=member4, age=40)
+     */
+    @Test
+    @Commit
+    public void bulkUpdate_solve() {
+        long count = queryFactory
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+
+        //영속성 컨텍스트 초기화
+        em.flush();
+        em.clear();
+
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        for(Member member1 : result){
+            System.out.println("member1 = " + member1);
+        }
+    }
+
+    /**
+     * 모든 member의 나이를 더해
+     * 빼기 : minus가 따로 없어서 add(-1)한다.
+     * 곱하기 : multiply()
+     * 나누기 : divide()
+     */
+    @Test
+    public void bulkAdd() {
+        long count = queryFactory
+                .update(member)
+                .set(member.age, member.age.add(1))
+                .execute();
+    }
+
+    /**
+     * 삭제하기
+     */
+    @Test
+    public void bulkDelete() {
+        long count = queryFactory
+                .delete(member)
+                .where(member.age.gt(18))
+                .execute();
     }
 
 
