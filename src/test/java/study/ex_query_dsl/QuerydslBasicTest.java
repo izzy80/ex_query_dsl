@@ -3,6 +3,7 @@ package study.ex_query_dsl;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -529,8 +530,39 @@ public class QuerydslBasicTest {
         }
     }
 
+    /**
+     * 상수, 문자 더하기
+     * tuple = [member1, s]
+     * tuple = [member2, s]
+     * tuple = [member3, s]
+     * tuple = [member4, s]
+     */
+    @Test
+    public void constant() {
+        List<Tuple> result = queryFactory
+                .select(member.username, Expressions.constant("s"))
+                .from(member)
+                .fetch();
 
+        for (Tuple tuple : result) {
+            System.out.println("tuple = " + tuple);
+        }
+    }
 
+    /**
+     * s = member1_10
+     */
+    @Test
+    public void concat() {
+        //{username}_{age}
+        List<String> result = queryFactory
+                .select(member.username.concat("_").concat(member.age.stringValue())) //서로 타입이 달라서 age를 string으로 바꿈
+                .from(member)
+                .where(member.username.eq("member1"))
+                .fetch();
 
-
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
 }
