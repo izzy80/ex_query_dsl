@@ -2,10 +2,10 @@
 ## 1. 프로젝트 생성
 - java 21
 - springboot 3.x
-  - 의존성
+- 의존성
   - Spring Web, jpa, h2, lombok
 - gradle
-  ```
+```
     plugins {
   id 'java'
   id 'org.springframework.boot' version '3.4.0'
@@ -40,15 +40,15 @@
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	//test 롬복 사용
-	testCompileOnly 'org.projectlombok:lombok'
-	testAnnotationProcessor 'org.projectlombok:lombok'
+    //test 롬복 사용
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 	
-	//Querydsl 추가
-	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    //Querydsl 추가
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
   }
   
   // gradle clean 시에 QClass 디렉토리 삭제
@@ -60,7 +60,28 @@
   tasks.named('test') {
   useJUnitPlatform()
   }
-    ```
+```
+- yml
+```
+spring:
+    datasource:
+        url: jdbc:h2:tcp://localhost/~/ex_query_dsl
+        username: sa
+        password:
+        driver-class-name: org.h2.Driver
+
+    jpa:
+      hibernate:
+        ddl-auto: create
+      properties:
+        hibernate:
+          show_sql: true
+          format_sql: true
+          use_sql_comments: true #querydsl로 작성하면 jqpl을 볼 수 없는데, 이걸 작성하면 볼 수 있음
+logging.level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
+```
 ## 0. QnA
 1. Q파일은 git에서 관리하지 말자
    <details>

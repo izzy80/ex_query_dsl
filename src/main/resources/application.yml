@@ -12,6 +12,7 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+        use_sql_comments: true #querydsl로 작성하면 jqpl을 볼 수 없는데, 이걸 작성하면 볼 수 있음
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace

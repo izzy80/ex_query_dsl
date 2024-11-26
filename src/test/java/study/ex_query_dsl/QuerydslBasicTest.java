@@ -12,6 +12,7 @@ import study.ex_query_dsl.entity.QMember;
 import study.ex_query_dsl.entity.Team;
 
 import static org.assertj.core.api.Assertions.*;
+import static study.ex_query_dsl.entity.QMember.*;
 
 @SpringBootTest
 @Transactional
@@ -56,17 +57,32 @@ public class QuerydslBasicTest {
         System.out.println(findMember);
     }
 
-    @Test
+//    @Test
+//    public void startQuerydsl() {
+////        queryFactory  = new JPAQueryFactory(em);
+////        QMember m = new QMember("m"); //1. 별칭 직접 지정
+//        QMember m = QMember.member; //2. 기본 인스턴스 사용
+//
+//        Member findMember = queryFactory
+//                .select(m)
+//                .from(m)
+//                .where(m.username.eq("member1")) //파라미터 바인딩 자동으로 처리
+//                .fetchOne();
+//
+//        assertThat(findMember.getUsername()).isEqualTo("member1");
+//    }
+        @Test
     public void startQuerydsl() {
-//        queryFactory  = new JPAQueryFactory(em);
-        QMember m = new QMember("m");
-
+        //3. static 이용
+        //보통 이와 같은 방식을 사용하고 선언해서 쓰는 경우는 셀프 조인할 때!
         Member findMember = queryFactory
-                .select(m)
-                .from(m)
-                .where(m.username.eq("member1")) //파라미터 바인딩 자동으로 처리
+                .select(member)
+                .from(member)
+                .where(member.username.eq("member1"))
                 .fetchOne();
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
     }
+
+
 }
