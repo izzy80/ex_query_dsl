@@ -245,7 +245,7 @@ public class QuerydslBasicTest {
      */
     @Test
     @DisplayName("group")
-    void group() throws Exception {
+    public void group() throws Exception {
         //given
         List<Tuple> result = queryFactory
                 .select(team.name, member.age.avg())
@@ -264,6 +264,102 @@ public class QuerydslBasicTest {
 
         assertThat(teamB.get(team.name)).isEqualTo("teamB");
         assertThat(teamB.get(member.age.avg())).isEqualTo(35); //(30 + 40) / 2
+    }
+
+    /**
+     * 팀 A 소속인 모든 회원
+     */
+    @Test
+    @DisplayName("join")
+    public void join(){
+        //given
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .join(member.team, team) //default는 inner join
+                .where(team.name.eq("teamA"))
+                .fetch();
+
+        assertThat(result)
+                .extracting("username") //result객체에서 username 속성 추출
+                .containsExactly("member1", "member2"); //해당 값들이 포함되어 있는지
+    }
+
+    /**
+     * 세타 조인 (예시라 억지긴 함)
+     * 연관관계 없는 테이블끼리 join
+     * 회원의 이름이 팀 이름과 같은 회원 조회
+     */
+    @Test
+    public void theta_join() {
+        //기존에는 외부 조인이 불가능했지만, 최근에는 on을 사용하면 해결 가능
+        em.persist(new Member("teamA"));
+        em.persist(new Member("teamB"));
+        em.persist(new Member("teamC"));
+
+        List<Member> result = queryFactory
+                .select(member)
+                .from(member, team) //위 test와는 달리 그냥 table 두개를 가져옴
+                .where(member.username.eq(team.name))
+                .fetch();
+
+        assertThat(result)
+                .extracting("username")
+                .containsExactly("teamA", "teamB");
+    }
+
+    /**
+     * 예) 회원과 팀을 조인하면서, 팀 이름이 teamA인 팀만 조회, 회원은 모두 조회
+     * JPQL : select m, t from Member m left join m.team t on t.name = 'teamA'
+     */
+    @Test
+    public void join_on_filtering() {
+        //지금 이 경우는 join,where로 써도 괜찮아서 외부 조인보다는 inner join으로 풀어내가는 것을 추천
+        //given
+        List<Tuple> result = queryFactory
+                .select(member, team)
+                .from(member)
+                .leftJoin(member.team, team).on(team.name.eq("teamA"))
+//                .join(member.team, team).where(team.name.eq("teamA")) //이거랑 결과 똑같
+                .fetch();
+
+        //when
+        for (Tuple tuple : result) {
+            System.out.println("tuple = " + tuple);
+        }
+    }
+
+    /**
+     * 연관관계 없는 엔티티 외부 조인
+     * 회원의 이름이 팀 이름과 같은 대상을 외부 조인
+     *
+     * 이 경우에는 자주 쓰임
+     */
+    /**
+     * tuple = [Member(id=62, username=member1, age=10), Team(id=27, name=teamA)]
+     * tuple = [Member(id=63, username=member2, age=20), Team(id=27, name=teamA)]
+     * tuple = [Member(id=64, username=member3, age=30), null]
+     * tuple = [Member(id=65, username=member4, age=40), null]
+     */
+    @Test
+    public void join_on_no_relation() {
+        em.persist(new Member("teamA"));
+        em.persist(new Member("teamB"));
+        em.persist(new Member("teamC"));
+
+        List<Tuple> result = queryFactory
+                .select(member,team)
+                .from(member)
+                .leftJoin(team).on(member.username.eq(team.name))
+//                .leftJoin(member.team, team).on(team.name.eq("teamA")) //원래 이렇게 썼을 때, id로 매칭이 되는데
+                //위 코드는 team만 써서 id를 빼고 on에 있는 username으로만 매칭이 된다.
+                //그리고 leftJoin이라 Member가 기준이기 때문에 null이 있지만,
+                //Join(innerJoin)으로 하면 null이 다 사라짐
+                .where(member.username.eq(team.name))
+                .fetch();
+
+        for (Tuple tuple : result) {
+            System.out.println("tuple = " + tuple);
+        }
     }
 
 
