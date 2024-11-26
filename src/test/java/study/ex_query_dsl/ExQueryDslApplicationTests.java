@@ -24,7 +24,8 @@ class ExQueryDslApplicationTests {
 		em.persist(hello);
 
 		JPAQueryFactory query = new JPAQueryFactory(em);
-		QHello qHello = new QHello("h");
+//		QHello qHello = new QHello("h");
+		QHello qHello = QHello.hello;
 
 		Hello result = query
 						.selectFrom(qHello)
