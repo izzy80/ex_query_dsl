@@ -74,4 +74,4 @@
     Intellij로 바꿀 시, QEntity를 imort하지 못하는 오류가 생김
 2. git pull 받을 때 한글 경로 포함시키지 말기. -> 오류남
     [Link1](https://www.inflearn.com/questions/1116732)
-3. 
+3. jpql과는 달리 compile 시점에 오류 발견 할 수 있다. 
