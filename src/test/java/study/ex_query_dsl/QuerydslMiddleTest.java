@@ -1,5 +1,6 @@
 package study.ex_query_dsl;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
@@ -21,6 +22,7 @@ import study.ex_query_dsl.entity.Team;
 
 import static study.ex_query_dsl.entity.QMember.*;
 import static study.ex_query_dsl.entity.QTeam.team;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
@@ -247,6 +249,35 @@ public class QuerydslMiddleTest {
     /**
      *
      */
+    @Test
+    public void dynamicQuery_BooleanBuilder() {
+        String usernameParam = "member1";
+        Integer ageParam = 10;
+
+        List<Member> result = searchMember1(usernameParam, ageParam);
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    /**
+     * parameter가 null이냐 아니냐에 따라 동적으로 바뀌어야 함.
+     * @param usernameCond
+     * @param ageCond
+     * @return
+     */
+    private List<Member> searchMember1(String usernameCond, Integer ageCond) {
+        BooleanBuilder builder = new BooleanBuilder(); //여기에 초기값을 넣을 수도 있음
+
+        if (usernameCond != null) {
+            builder.and(member.username.eq(usernameCond));
+        }
+        if (ageCond != null) {
+            builder.and(member.age.eq(ageCond));
+        }
+        return queryFactory
+                .selectFrom(member)
+                .where(builder) //and,or 조립 가능
+                .fetch();
+    }
 
 
 
