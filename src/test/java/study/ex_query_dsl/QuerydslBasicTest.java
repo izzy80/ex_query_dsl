@@ -71,7 +71,8 @@ public class QuerydslBasicTest {
 //
 //        assertThat(findMember.getUsername()).isEqualTo("member1");
 //    }
-        @Test
+
+    @Test
     public void startQuerydsl() {
         //3. static 이용
         //보통 이와 같은 방식을 사용하고 선언해서 쓰는 경우는 셀프 조인할 때!
@@ -83,6 +84,35 @@ public class QuerydslBasicTest {
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
     }
+
+    /**
+     * 검색 조건 쿼리
+     */
+    @Test
+    public void search() {
+        Member findMember = queryFactory
+                .selectFrom(member)
+                //이름이 member1이면서 나이가 10살인 사람을 조회해
+                .where(member.username.eq("member1")
+                        .and(member.age.eq(10))) //chain을 and, or 가능
+                .fetchOne();
+
+        assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
+
+    @Test
+    public void searchAndParam() {
+        Member findMember = queryFactory
+                .selectFrom(member)
+                //chain이 and이면 ,로 쓸 수 있음
+                .where(member.username.eq("member1"),
+                        member.age.eq(10))
+                .fetchOne();
+
+        assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
+
+
 
 
 }
