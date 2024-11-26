@@ -84,8 +84,8 @@ logging.level:
 ```
 
 ## 2. 링크
-[강의 보러가기](https://www.inflearn.com/course/querydsl-%EC%8B%A4%EC%A0%84/dashboard)   
-[코드 보러가기](https://github.com/izzy80/ex_query_dsl/blob/main/src/test/java/study/ex_query_dsl/QuerydslBasicTest.java)
+- [강의 보러가기](https://www.inflearn.com/course/querydsl-%EC%8B%A4%EC%A0%84/dashboard)   
+- [코드 보러가기 - Basic](https://github.com/izzy80/ex_query_dsl/blob/main/src/test/java/study/ex_query_dsl/QuerydslBasicTest.java)
 
 ## 0. QnA
 1. Q파일은 git에서 관리하지 말자
@@ -112,3 +112,5 @@ logging.level:
 5. case문 역시, DB는 원본데이터를 그대로 두고,   
     보여주고 그런 경우 애플리케이션 단에서 다루기.   
     꼭 써야한다면 쓰지만 그렇지 않다면 쓰지말자
+6. Tuple을 repository를 넘어서, service,controller까지 넘어가는 것은 좋아 보이지 않음.   
+   그래서 tuple대신에 dto를 사용하자. 
