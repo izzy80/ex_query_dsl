@@ -82,17 +82,30 @@ logging.level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
 ```
+
+## 2. 링크
+[강의 보러가기](https://www.inflearn.com/course/querydsl-%EC%8B%A4%EC%A0%84/dashboard)   
+[코드 보러가기](https://github.com/izzy80/ex_query_dsl/blob/main/src/test/java/study/ex_query_dsl/QuerydslBasicTest.java)
+
 ## 0. QnA
 1. Q파일은 git에서 관리하지 말자
    <details>
    <summary>자세히 보기</summary>
-   충돌이 일어날 가능성이 있다.  
+   충돌이 일어날 가능성이 있다. </br>
    [Link 1](https://www.inflearn.com/questions/875369)
    </details>
 
 ## Tip
-1. Build, Execution, Deployment > Build Tools > Gradle 설정 Intellj가 아닌 Gradle로 냅두기. 
+1. Build, Execution, Deployment > Build Tools > Gradle 설정 Intellj가 아닌 Gradle로 냅두기.  
     Intellij로 바꿀 시, QEntity를 imort하지 못하는 오류가 생김
-2. git pull 받을 때 한글 경로 포함시키지 말기. -> 오류남
+2. git pull 받을 때 한글 경로 포함시키지 말기-> 오류남   
     [Link1](https://www.inflearn.com/questions/1116732)
 3. jpql과는 달리 compile 시점에 오류 발견 할 수 있다. 
+4. JPA의 서브쿼리는 select, where는 가능하지만, from은 안 된다.  
+   이는 QueryDsl도 안 된다. QueryDsl은 JPQL의 빌더 역할과 같기때문
+   
+    from절의 서브쿼리 해결방안
+   1. 서브쿼리를 join으로 변경한다.
+   2. 애플리케이션에서 쿼리를 2번 분리해서 실행한다.
+   3. nativeSQL을 사용한다.   
+   -> DB는 데이터를 최소화하는 역할
