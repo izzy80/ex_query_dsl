@@ -86,31 +86,51 @@ logging.level:
 ## 2. 링크
 - [강의 보러가기](https://www.inflearn.com/course/querydsl-%EC%8B%A4%EC%A0%84/dashboard)   
 - [코드 보러가기 - Basic](https://github.com/izzy80/ex_query_dsl/blob/main/src/test/java/study/ex_query_dsl/QuerydslBasicTest.java)
+- [코드 보러가기 - middle](https://github.com/izzy80/ex_query_dsl/blob/main/src/test/java/study/ex_query_dsl/QuerydslMiddleTest.java)
 
 ## 0. QnA
 1. Q파일은 git에서 관리하지 말자
    <details>
    <summary>자세히 보기</summary>
-   충돌이 일어날 가능성이 있다. </br>
-   [Link 1](https://www.inflearn.com/questions/875369)
+   이유: Q파일은 QueryDSL에 의해 자동 생성되며, 이를 Git에서 관리하면 충돌이 발생할 가능성이 높습니다.</br>
+   참고 링크: <a href="https://www.inflearn.com/questions/875369" target="_blank">Inflearn Q&A</a>
    </details>
 
-## Tip
-1. Build, Execution, Deployment > Build Tools > Gradle 설정 Intellj가 아닌 Gradle로 냅두기.  
-    Intellij로 바꿀 시, QEntity를 imort하지 못하는 오류가 생김
-2. git pull 받을 때 한글 경로 포함시키지 말기-> 오류남   
-    [Link1](https://www.inflearn.com/questions/1116732)
-3. jpql과는 달리 compile 시점에 오류 발견 할 수 있다. 
-4. JPA의 서브쿼리는 select, where는 가능하지만, from은 안 된다.  
-   이는 QueryDsl도 안 된다. QueryDsl은 JPQL의 빌더 역할과 같기때문
-   
-    from절의 서브쿼리 해결방안
-   1. 서브쿼리를 join으로 변경한다.
-   2. 애플리케이션에서 쿼리를 2번 분리해서 실행한다.
-   3. nativeSQL을 사용한다.   
-   -> DB는 데이터를 최소화하는 역할
-5. case문 역시, DB는 원본데이터를 그대로 두고,   
-    보여주고 그런 경우 애플리케이션 단에서 다루기.   
-    꼭 써야한다면 쓰지만 그렇지 않다면 쓰지말자
-6. Tuple을 repository를 넘어서, service,controller까지 넘어가는 것은 좋아 보이지 않음.   
-   그래서 tuple대신에 dto를 사용하자. 
+## 개발 팁 (QueryDSL 및 JPA 관련)
+### 1. Gradle 설정
+- **경로**: `Build, Execution, Deployment > Build Tools > Gradle`
+- **설정**: Intellij 대신 **Gradle**로 설정 유지.
+    - Intellij로 변경 시, `QEntity`를 import하지 못하는 오류 발생 가능.
+---
+### 2. Git 사용 시 주의점
+- **한글 경로 포함 금지**: 한글 경로가 포함된 파일을 `git pull` 받을 경우 오류가 발생할 수 있음.
+    - 참고 링크: [Inflearn Q&A](https://www.inflearn.com/questions/1116732)
+---
+### 3. JPQL과 QueryDSL 비교
+- JPQL과 달리 **QueryDSL은 컴파일 시점에 오류를 발견 가능**.
+    - QueryDSL은 JPQL의 빌더 역할을 수행.
+---
+### 4. JPA 및 QueryDSL 서브쿼리 제한
+- **제한 사항**:
+    - **`SELECT`** 및 **`WHERE`** 절에서 서브쿼리 가능.
+    - **`FROM`** 절에서는 서브쿼리 불가. (QueryDSL도 동일)
+- **해결 방안**:
+    1. 서브쿼리를 **JOIN**으로 변경.
+    2. 애플리케이션에서 쿼리를 **2번 분리**하여 실행.
+    3. **Native SQL** 사용.
+- **원칙**: 데이터베이스는 데이터를 최소화하여 처리하는 역할을 담당.
+---
+### 5. CASE문 사용 지침
+- **DB 역할**:
+    - 원본 데이터를 그대로 유지하고 가공은 애플리케이션 단에서 처리.
+- **권장 사항**:
+    - 가능한 **CASE문은 지양**.
+    - 꼭 필요한 경우에만 사용.
+---
+### 6. Tuple 사용 지침
+- **문제점**:
+    - **`Tuple` 객체**를 Repository에서 Service, Controller로 넘기는 것은 바람직하지 않음.
+- **대안**:
+    - **DTO**를 활용하여 데이터를 처리하도록 권장.
+---
+### 7. 
