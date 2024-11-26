@@ -1,9 +1,11 @@
 package study.ex_query_dsl;
 
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +18,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static study.ex_query_dsl.entity.QMember.*;
+import static study.ex_query_dsl.entity.QTeam.team;
 
 @SpringBootTest
 @Transactional
@@ -181,6 +184,9 @@ public class QuerydslBasicTest {
         assertThat(memberNull.getUsername()).isNull();
     }
 
+    /**
+     * 페이징
+     */
     @Test
     public void paging1() {
         List<Member> result = queryFactory
@@ -202,12 +208,63 @@ public class QuerydslBasicTest {
                 .limit(2)
                 .fetchResults();
 
-        assertThat(queryResult.getTotal()).isEqualTo(4);
-        assertThat(queryResult.getLimit()).isEqualTo(2);
-        assertThat(queryResult.getOffset()).isEqualTo(1);
-        assertThat(queryResult.getResults().size()).isEqualTo(2);
+        assertThat(queryResult.getTotal()).isEqualTo(4); //총 데이터의 개수
+        assertThat(queryResult.getLimit()).isEqualTo(2); //한 번에 가져올 데이터의 개수
+        assertThat(queryResult.getOffset()).isEqualTo(1); //인덱스 번호
+        assertThat(queryResult.getResults().size()).isEqualTo(2); //실제 반환된 결과의 크기
     }
 
+    /**
+     * 조인
+     */
+    @Test
+    public void aggregation(){
+        //데이터 타입이 여러 개라 tuple을 사용
+        //그런데 사실 실무에서는 tuple을 잘 쓰지 않음
+        //DTO로 직접 뽑는 방법이 있는데 이걸 더 많이 쓰임
+        List<Tuple> result = queryFactory
+                .select(member.count(),
+                        member.age.sum(),
+                        member.age.avg(),
+                        member.age.max(),
+                        member.age.min())
+                .from(member)
+                .fetch();
+
+        Tuple tuple = result.get(0);
+        assertThat(tuple.get(member.count())).isEqualTo(4);
+        assertThat(tuple.get(member.age.sum())).isEqualTo(100);
+        assertThat(tuple.get(member.age.avg())).isEqualTo(25);
+        assertThat(tuple.get(member.age.max())).isEqualTo(40);
+        assertThat(tuple.get(member.age.min())).isEqualTo(10);
+    }
+
+    /**
+     * 팀의 이름과 각 팀의 평균 연령을 구해라
+     *
+     */
+    @Test
+    @DisplayName("group")
+    void group() throws Exception {
+        //given
+        List<Tuple> result = queryFactory
+                .select(team.name, member.age.avg())
+                .from(member)
+                .join(member.team, team)
+                .groupBy(team.name)
+                .fetch();
+        
+        //when
+        Tuple teamA = result.get(0);
+        Tuple teamB = result.get(1);
+
+        //then
+        assertThat(teamA.get(team.name)).isEqualTo("teamA");
+        assertThat(teamA.get(member.age.avg())).isEqualTo(15); //(10 + 20) / 2
+
+        assertThat(teamB.get(team.name)).isEqualTo("teamB");
+        assertThat(teamB.get(member.age.avg())).isEqualTo(35); //(30 + 40) / 2
+    }
 
 
 
