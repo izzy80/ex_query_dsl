@@ -193,3 +193,6 @@ em.flush(), em.clear() 하지 않으면 영속성컨텍스트와 DB와 데이터
 정렬( Sort )은 조건이 조금만 복잡해져도 Pageable의 Sort기능을 사용하기 어렵다.   
 루트 엔티티 범위를 넘어가는 동적 정렬 기능이 필요하면 스프링 데이터 페이징이 제공하는 Sort를 사용하기 보다는   
 파라미터를 받아서 직접 처리하는 것을 권장한다
+---
+### 15. 스프링 데이터 JPA가 제공하는 Querydsl 기능
+- QuerydslPredicateExecutor -> 실무에서는 권장X
