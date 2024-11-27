@@ -89,7 +89,7 @@ logging.level:
 - [코드 보러가기 - middle](https://github.com/izzy80/ex_query_dsl/blob/main/src/test/java/study/ex_query_dsl/QuerydslMiddleTest.java)
 - [코드 보러가기 - 실무 활용 : 순수 JPA와 Querydsl](https://github.com/izzy80/ex_query_dsl/blob/main/src/test/java/study/ex_query_dsl/repository/MemberJpaRepositoryTest.java)
 - [코드 보러가기 - 실무 활용 : 스프링 데이터 JPA와 Querydsl](https://github.com/izzy80/ex_query_dsl/blob/main/src/test/java/study/ex_query_dsl/repository/MemberRepositoryTest.java)
-- [코드 보러가기 - 스프링 데이터 JPA가 제공하는 Querydsl 기능]()
+- [코드 보러가기 - 스프링 데이터 JPA가 제공하는 Querydsl 기능](https://github.com/izzy80/ex_query_dsl/blob/main/src/test/java/study/ex_query_dsl/repository/MemberRepositoryTest.java)
 
 
 ## 0. QnA
@@ -196,3 +196,4 @@ em.flush(), em.clear() 하지 않으면 영속성컨텍스트와 DB와 데이터
 ---
 ### 15. 스프링 데이터 JPA가 제공하는 Querydsl 기능
 - QuerydslPredicateExecutor -> 실무에서는 권장X
+- Querydsl Web -> 정말 권장 안 함
