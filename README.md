@@ -106,6 +106,11 @@ logging.level:
    애플리케이션 처리속도가 원격 통신속도보다 월등히 빠르기 때문입니다.
    참고 링크 : <a href="https://www.inflearn.com/questions/1213023" target="_blank">Inflearn Q&A</a>
    </details>
+3. @PostConstruct와 @Transactional 분리   
+    <details>
+   <summary>자세히 보기</summary>
+   참고 링크: <a href="https://www.inflearn.com/community/questions/26902" target="_blank">Inflearn Q&A</a>
+   </details>
 
 ## 개발 팁 (QueryDSL 및 JPA 관련)
 ### 1. Gradle 설정
