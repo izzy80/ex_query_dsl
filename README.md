@@ -195,5 +195,8 @@ em.flush(), em.clear() 하지 않으면 영속성컨텍스트와 DB와 데이터
 파라미터를 받아서 직접 처리하는 것을 권장한다
 ---
 ### 15. 스프링 데이터 JPA가 제공하는 Querydsl 기능
+1. 인터페이스 지원
 - QuerydslPredicateExecutor -> 실무에서는 권장X
 - Querydsl Web -> 정말 권장 안 함
+2. 리포지토리 지원
+- QuerydslRepositorySupport -> sort 지원 안 함
