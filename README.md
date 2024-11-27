@@ -87,6 +87,10 @@ logging.level:
 - [강의 보러가기](https://www.inflearn.com/course/querydsl-%EC%8B%A4%EC%A0%84/dashboard)   
 - [코드 보러가기 - Basic](https://github.com/izzy80/ex_query_dsl/blob/main/src/test/java/study/ex_query_dsl/QuerydslBasicTest.java)
 - [코드 보러가기 - middle](https://github.com/izzy80/ex_query_dsl/blob/main/src/test/java/study/ex_query_dsl/QuerydslMiddleTest.java)
+- [코드 보러가기 - 실무 활용 : 순수 JPA와 Querydsl](https://github.com/izzy80/ex_query_dsl/blob/main/src/test/java/study/ex_query_dsl/repository/MemberJpaRepositoryTest.java)
+- [코드 보러가기 - 실무 활용 : 스프링 데이터 JPA와 Querydsl]()
+- [코드 보러가기 - 스프링 데이터 JPA가 제공하는 Querydsl 기능]()
+
 
 ## 0. QnA
 1. Q파일은 git에서 관리하지 말자
@@ -154,3 +158,20 @@ em.flush(), em.clear() 하지 않으면 영속성컨텍스트와 DB와 데이터
 ### 9. select vs selectFrom
 - select() : 어떤 필드만 가지고 오고 싶을때
 - selectFrom() : 특정 필드가 아니라 그냥 전체 조회할 때 편하게 쓴다. 
+---
+### 10. 동적쿼리
+- 기본값이 있는 것이 좋다. condition 값이 아예 없으면 오류 발생
+- BooleanExpression을 쓰면 조합이 가능함 
+---
+### 11. JPA에서 데이터 조회 방법
+1. 엔티티로 조회하기
+   - fetch join 사용가능
+   - 특정 엔티티에 종속될 수 있음
+2. DTO로 조회하기
+   - 일반 join 사용가능
+   - 특정 엔티티에 종속X => 여러 테이블 조인 => 각 테이블에 있는 원하는 값만 별도로 조회 가능
+
+- 참고 링크: [Inflearn Q&A](https://www.inflearn.com/questions/1120713)
+---
+### 12. join도 chain하는 방법
+- 참고 링크: [Inflearn Q&A](https://www.inflearn.com/questions/899972)
